@@ -76,6 +76,10 @@ public class AVL {
 
         return result;
     }
+
+    public Node getRoot() {
+        return root;
+    }
 }
 
 class Node {
