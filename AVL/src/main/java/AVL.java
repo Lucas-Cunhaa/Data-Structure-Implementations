@@ -40,9 +40,9 @@ public class AVL {
         }
     }
 
-    public void rotationRight(Node node) {
-        Node prevRight = node.right.right;
-        node.right.right = node;
+    public void rotationLeft(Node node) {
+        Node prevLeft = node.right.left;
+        node.right.left = node;
 
         if(root == node) 
             root = node.right;
@@ -51,9 +51,32 @@ public class AVL {
         else 
             node.parent.right = node.right;
         
+        if (prevLeft != null)
+            prevLeft.parent = node;
+
         node.right.parent = node.parent;
         node.parent = node.right;
-        node.right = prevRight;
+        node.right = prevLeft;
+        
+    }
+
+    public void rotationRight(Node node) {
+        Node newRoot = node.left;
+        node.left = newRoot.right;
+
+        if(node.left != null)
+            node.left.parent = node;
+
+        if(root == node)
+            root = newRoot;
+        else if(node.parent.value > node.value) 
+            node.parent.left = newRoot;
+        else 
+            node.parent.right = newRoot;
+        
+        newRoot.parent = node.parent;
+        newRoot.right = node;
+        node.parent = newRoot;
     }
 
     public ArrayList<Integer> bfs() {
@@ -78,7 +101,7 @@ public class AVL {
     }
 
     public Node getRoot() {
-        return root;
+        return this.root;
     }
 }
 
@@ -114,8 +137,11 @@ class Node {
          
          else if(this.left == null) return 1 + this.right.getHeight();
 
-         return Math.max(this.left.getHeight(), this.right.getHeight());
+         return 1 + Math.max(this.left.getHeight(), this.right.getHeight());
     }
+
+
+    
 
     public int getBalance() {
         int leftHeigth = this.left == null ? -1 : this.left.getHeight();

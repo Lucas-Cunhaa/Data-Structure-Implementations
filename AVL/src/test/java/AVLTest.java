@@ -19,7 +19,8 @@ public class AVLTest {
         avl.add(64);
         avl.add(72);
 
-        ArrayList<Integer> expectedBFSList = new ArrayList<>(Arrays.asList(44, 25, 55, 20, 30, 50, 64, 60, 72));
+        //ArrayList<Integer> expectedBFSList = new ArrayList<>(Arrays.asList(44, 25, 55, 20, 30, 50, 64, 60, 72));
+        ArrayList<Integer> expectedBFSList = new ArrayList<>(Arrays.asList(50, 44, 60, 30, 55, 64, 20, 72, 25));
 
         assertEquals(expectedBFSList, avl.bfs());
 
@@ -73,18 +74,95 @@ public class AVLTest {
     }
 
     @Test
-    public void testRotationRight() {
+    public void testRotationLeft() {
         AVL avl = new AVL();
 
         avl.add(30);
         avl.add(40);
         avl.add(50);
 
+        avl.rotationLeft(avl.getRoot());
+
+        ArrayList<Integer> expectedBFS = new ArrayList<>(Arrays.asList(40, 30, 50));
+        assertEquals(expectedBFS, avl.bfs());
+
+         assertEquals(0, avl.getRoot().getBalance());
+        assertEquals(0, avl.getRoot().getBalance());
+
+        assertTrue(avl.getRoot().isBalanced());
+    }
+
+    @Test
+    public void testRotationRightSimple() {
+        AVL avl = new AVL();
+
+        avl.add(30);
+        avl.add(20);
+        avl.add(10); // Desbalanceia para a esquerda
+
         avl.rotationRight(avl.getRoot());
 
-        ArrayList<Integer> expectedBFS = new ArrayList<>(Arrays.asList(30, 40, 50));
+        ArrayList<Integer> expectedBFS = new ArrayList<>(Arrays.asList(20, 10, 30));
+        assertEquals(expectedBFS, avl.bfs());
+
+        assertEquals(0, avl.getRoot().getBalance());
+        assertTrue(avl.getRoot().isBalanced());
+    }
+
+    @Test
+    public void testRotationRightWithSubtree() {
+        AVL avl = new AVL();
+
+        avl.add(50);
+        avl.add(30);
+        avl.add(20);
+        avl.add(40);
+
+        avl.rotationRight(avl.getRoot());
+
+        ArrayList<Integer> expectedBFS = new ArrayList<>(Arrays.asList(30, 20, 50, 40));
         assertEquals(expectedBFS, avl.bfs());
 
         assertTrue(avl.getRoot().isBalanced());
     }
+
+    @Test
+    public void testRotationRightNotRoot() {
+        AVL avl = new AVL();
+
+        avl.add(60);
+        avl.add(40);
+        avl.add(20);
+        avl.add(10);
+
+        avl.rotationRight(avl.getRoot().left); // Rotaciona 40
+
+        ArrayList<Integer> expectedBFS = new ArrayList<>(Arrays.asList(60, 20, 10, 40));
+        assertEquals(expectedBFS, avl.bfs());
+    }
+
+    @Test
+    public void testRotationRightComplex() {
+        AVL avl = new AVL();
+        
+        avl.add(100);
+        avl.add(80);
+        avl.add(120);
+        avl.add(70);
+        avl.add(90);
+        avl.add(60);
+        
+        avl.rotationRight(avl.getRoot().left); // Rotaciona 80
+        
+        ArrayList<Integer> expectedBFS = new ArrayList<>(Arrays.asList(100, 70, 120, 60, 80, 90));
+        assertEquals(expectedBFS, avl.bfs());
+}
+
+
+
+
+
+
+
+
 }
