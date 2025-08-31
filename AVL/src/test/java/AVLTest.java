@@ -19,7 +19,8 @@ public class AVLTest {
         avl.add(64);
         avl.add(72);
 
-        //ArrayList<Integer> expectedBFSList = new ArrayList<>(Arrays.asList(44, 25, 55, 20, 30, 50, 64, 60, 72));
+        // ArrayList<Integer> expectedBFSList = new ArrayList<>(Arrays.asList(44, 25,
+        // 55, 20, 30, 50, 64, 60, 72));
         ArrayList<Integer> expectedBFSList = new ArrayList<>(Arrays.asList(50, 44, 60, 30, 55, 64, 20, 72, 25));
 
         assertEquals(expectedBFSList, avl.bfs());
@@ -47,7 +48,8 @@ public class AVLTest {
 
         assertEquals(expectedBFSList, avl.bfs());
     }
-       @Test
+
+    @Test
     public void testAddSimple() {
         AVL avl = new AVL();
 
@@ -56,7 +58,7 @@ public class AVLTest {
         avl.add(5);
 
         ArrayList<Integer> expectedBFS = new ArrayList<>(Arrays.asList(10, 5, 20));
-        assertEquals(expectedBFS, avl.bfs()); 
+        assertEquals(expectedBFS, avl.bfs());
     }
 
     @Test
@@ -86,7 +88,7 @@ public class AVLTest {
         ArrayList<Integer> expectedBFS = new ArrayList<>(Arrays.asList(40, 30, 50));
         assertEquals(expectedBFS, avl.bfs());
 
-         assertEquals(0, avl.getRoot().getBalance());
+        assertEquals(0, avl.getRoot().getBalance());
         assertEquals(0, avl.getRoot().getBalance());
 
         assertTrue(avl.getRoot().isBalanced());
@@ -144,25 +146,61 @@ public class AVLTest {
     @Test
     public void testRotationRightComplex() {
         AVL avl = new AVL();
-        
+
         avl.add(100);
         avl.add(80);
         avl.add(120);
         avl.add(70);
         avl.add(90);
         avl.add(60);
-        
+
         avl.rotationRight(avl.getRoot().left); // Rotaciona 80
-        
+
         ArrayList<Integer> expectedBFS = new ArrayList<>(Arrays.asList(100, 70, 120, 60, 80, 90));
         assertEquals(expectedBFS, avl.bfs());
-}
+    }
 
+    @Test
+    public void testZigZagRotation() {
+        AVL avl = new AVL();
 
+        // Insere de forma a causar rotação Zig-Zag
+        avl.add(50);
+        avl.add(30);
+        avl.add(40); // esse nó força rotação dupla
 
+        // O 40 deve virar a raiz após a rotação
+        avl.bestRotation(avl.getRoot());
 
+        assertEquals(40, avl.getRoot().value);
 
+        // Estrutura esperada:
+        // 40
+        // / \
+        // 30 50
+        assertEquals(30, avl.getRoot().left.value);
+        assertEquals(50, avl.getRoot().right.value);
+    }
 
+    @Test
+    public void testZagZigRotation() {
+        AVL avl = new AVL();
 
+        // Insere de forma a causar rotação Zag-Zig
+        avl.add(30);
+        avl.add(50);
+        avl.add(40); // esse nó força rotação dupla
+
+        avl.bestRotation(avl.getRoot());
+        // O 40 deve virar a raiz após a rotação
+        assertEquals(40, avl.getRoot().value);
+
+        // Estrutura esperada:
+        // 40
+        // / \
+        // 30 50
+        assertEquals(30, avl.getRoot().left.value);
+        assertEquals(50, avl.getRoot().right.value);
+    }
 
 }

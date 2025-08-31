@@ -40,6 +40,23 @@ public class AVL {
         }
     }
 
+    public void bestRotation(Node node) {
+        if(node.isRightPending())
+            if(node.right.right != null) rotationLeft(node);
+            else {
+                rotationRight(node.right);
+                rotationLeft(node);
+            }
+        else {
+            if(node.left.left != null) rotationRight(node);
+            else {
+                rotationLeft(node.left);
+                rotationRight(node);
+            }
+        }
+        
+    }
+
     public void rotationLeft(Node node) {
         Node prevLeft = node.right.left;
         node.right.left = node;
@@ -151,11 +168,11 @@ class Node {
     }
 
     public boolean isLeftPending() {
-        return getBalance() == 1;
+        return getBalance() >= 1;
     }
 
     public boolean isRightPending() {
-        return getBalance() == -1;
+        return getBalance() <= -1;
     }
 
     public boolean isBalanced() {
