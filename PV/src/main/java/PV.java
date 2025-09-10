@@ -1,124 +1,64 @@
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
-
 public class PV {
-    
-    private Node root;
-    private int size;
-    
-    public PV () {
-        this.size = -1;
+    Node root;
+
+    public PV(Node root) {
+        this.root = root;
     }
 
-    public void add(int value) {
+    public void addValue(int value) {
         Node newNode = new Node(value);
 
-        if(root == null) root = newNode;
+        if(this.root == null) root = newNode;
         else {
             Node aux = root;
 
             while(aux != null) {
-                if(value > aux.value) {
-                    if(aux.right == null) {
-                        aux.right = newNode;
-                        newNode.parent = aux;
-                        break;
-                    }
-                    aux = aux.right;
-                }
-
-                else {
-                    if(aux.left == null) {
+                if(aux.value > value) {
+                    if(aux.left == null)
                         aux.left = newNode;
-                        newNode.parent = aux;
-                        break;
-                    }
-                    aux = aux.left;
+                    else 
+                        aux = aux.left;
+                } else  {
+                    if(aux.right == null)
+                        aux.right = newNode;
+                    else 
+                        aux = aux.right;
                 }
             }
+
+            newNode.parent = aux;
+            newNode.uncle = aux.parent.value > aux.value ? aux.parent.right : aux.parent.left;
         }
     }
 
-    public void bestRotation(Node node) {
-        if(node.isRightPending())
-            if(node.right.right != null) rotationLeft(node);
-            else {
-                rotationRight(node.right);
-                rotationLeft(node);
-            }
-        else {
-            if(node.left.left != null) rotationRight(node);
-            else {
-                rotationLeft(node.left);
-                rotationRight(node);
-            }
-        }
-        
-    }
+    public void checkNode(Node node) {
+        if(node.parent == null && node.isRed()) node.color = Color.BLACK;
+        else if(node.parent.isBlack()) return;
 
-    public void rotationLeft(Node node) {
-        Node prevLeft = node.right.left;
-        node.right.left = node;
+        if(node.isRed() && node.parent.isRed() && (node.uncle != null && node.uncle.isRed())) {
+            node.parent.parent.color = Color.RED;
 
-        if(root == node) 
-            root = node.right;
-        else if (node.parent.value > node.value)
-             node.parent.left = node.right;
-        else 
-            node.parent.right = node.right;
-        
-        if (prevLeft != null)
-            prevLeft.parent = node;
+            node.parent.color = Color.BLACK;
+            node.uncle.color = Color.BLACK;
+            checkNode(node.parent.parent);
 
-        node.right.parent = node.parent;
-        node.parent = node.right;
-        node.right = prevLeft;
-        
-    }
+        } else if (node.isRed() && node.parent.isRed() && (node.uncle == null || node.uncle.isBlack())) {
 
-    public void rotationRight(Node node) {
-        Node newRoot = node.left;
-        node.left = newRoot.right;
-
-        if(node.left != null)
-            node.left.parent = node;
-
-        if(root == node)
-            root = newRoot;
-        else if(node.parent.value > node.value) 
-            node.parent.left = newRoot;
-        else 
-            node.parent.right = newRoot;
-        
-        newRoot.parent = node.parent;
-        newRoot.right = node;
-        node.parent = newRoot;
-    }
-
-    public ArrayList<Integer> bfs() {
-        ArrayList<Integer> result = new ArrayList<Integer>();
-        Queue<Node> queue = new LinkedList<Node>();
-
-        if(root == null) return result;
-
-        queue.add(root);
-        while(!queue.isEmpty()) {
-            Node current = queue.poll();
-
-            result.add(current.value);
-
-            if(current.left != null)
-                queue.add(current.left);
-            if(current.right != null)
-                queue.add(current.right);
         }
 
-        return result;
     }
 
-    public Node getRoot() {
-        return this.root;
+    public void rotationRight (Node node) {
+        Node nextRoot = node.left;
+        node.left = nextRoot.right;
+
+        
+
     }
+
+    public void rotationLeft (Node node) {
+
+    }
+
+
 }
-

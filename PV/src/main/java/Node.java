@@ -11,6 +11,7 @@ public class Node {
     Node(int v) {
         this.value = v;
         this.height = 0;
+        this.color = Color.RED;
     }
 
     public boolean isFolha() {
@@ -36,7 +37,7 @@ public class Node {
     }
 
     public int getBlackHeight() {
-        if(isFolha()) return 0;
+        if(isFolha()) return 1;
 
         if(this.right == null) 
             return this.left.isBlack() ?  1 + this.left.getBlackHeight() : 0 + this.left.getBlackHeight();
@@ -44,15 +45,16 @@ public class Node {
         if(this.left == null)
             return this.right.isBlack() ?  1 + this.right.getBlackHeight() : 0 + this.right.getBlackHeight();
 
-        (if )
-        return this.right.isBlack() ?  1 : 0 + Math.max(this.right.getBlackHeight();, this.left.getBlackHeight());
+        return (this.right.isBlack() ? 1 : this.left.isBlack() ? 1 : 0) + Math.max(this.right.getBlackHeight(), this.left.getBlackHeight());
     }
     
     public boolean isRed() {
         return this.color == Color.RED;
     }
 
-      public boolean isBlack() {
+    public boolean isBlack() {
         return this.color == Color.BLACK;
     }
+
+    public Node 
 }
