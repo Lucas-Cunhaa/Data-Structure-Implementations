@@ -56,5 +56,15 @@ public class Node {
         return this.color == Color.BLACK;
     }
 
-    public Node 
+    public boolean isZigZag() {
+        if(parent == null || isFolha()) return false; 
+
+        return parent.value > value && hasOnlyRigth();
+    }
+
+    public boolean isZagZig() {
+        if(parent == null || isFolha()) return false; 
+
+        return parent.value < value && hasOnlyLeft();
+    }
 }
