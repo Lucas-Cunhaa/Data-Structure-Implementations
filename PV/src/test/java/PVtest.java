@@ -199,9 +199,15 @@ public class PVtest {
         tree.addValue(10); // raiz
         tree.addValue(5); // filho esquerdo
         tree.addValue(15); // tio
+         Node root = tree.root;
+
+        assertTrue(root.isBlack(), "Raiz deve permanecer preta");
+        assertFalse(root.left.isBlack(), "Pai deve ser recolorido para preto");
+        assertFalse(root.right.isBlack(), "Tio deve ser recolorido para preto");
+
         tree.addValue(1); // insere causando conflito
 
-        Node root = tree.root;
+        root = tree.root;
         assertTrue(root.isBlack(), "Raiz deve permanecer preta");
         assertTrue(root.left.isBlack(), "Pai deve ser recolorido para preto");
         assertTrue(root.right.isBlack(), "Tio deve ser recolorido para preto");
@@ -211,7 +217,6 @@ public class PVtest {
     public void testCase4_ZigZagRotation() {
         PV tree = new PV(null);
         tree.addValue(10);
-        tree.addValue(5);
         tree.addValue(15);
         tree.addValue(12); // cria zig-zag (esquerda-direita)
 
@@ -224,7 +229,6 @@ public class PVtest {
     public void testCase5_ZigZigRotationLeft() {
         PV tree = new PV(null);
         tree.addValue(10);
-        tree.addValue(5);
         tree.addValue(15);
         tree.addValue(20); // cria zig-zig (direita-direita)
 
@@ -237,7 +241,6 @@ public class PVtest {
     public void testCase5_ZigZigRotationRight() {
         PV tree = new PV(null);
         tree.addValue(10);
-        tree.addValue(15);
         tree.addValue(5);
         tree.addValue(2); // cria zig-zig (esquerda-esquerda)
 
@@ -245,5 +248,40 @@ public class PVtest {
         assertEquals(2, tree.root.left.value);
         assertEquals(10, tree.root.right.value);
     }
+
+    @Test
+public void test_ZigZagRotation_RightLeft() {
+    PV tree = new PV(null);
+    tree.addValue(20);
+    tree.addValue(10);
+    tree.addValue(13);
+
+    assertEquals(13, tree.root.value, "Após rotação, 13 deve ser a nova raiz");
+    assertEquals(10, tree.root.left.value);
+    assertEquals(20, tree.root.right.value);
+    assertTrue(tree.root.isBlack(), "A nova raiz deve ser preta");
+    assertTrue(tree.root.left.isRed(), "O filho esquerdo deve ser vermelho");
+    assertTrue(tree.root.right.isRed(), "O filho direito deve ser vermelho");
+}
+
+@Test
+public void test_MultiLevelInsertion() {
+    PV tree = new PV(null);
+    tree.addValue(10);
+    tree.addValue(5);
+    tree.addValue(15);
+    tree.addValue(2);
+    tree.addValue(7);
+    tree.addValue(12);
+    tree.addValue(18);
+
+    assertTrue(tree.root.isBlack(), "A raiz deve ser preta");
+    assertTrue(tree.root.left.isBlack(), "O filho esquerdo da raiz deve ser preto");
+    assertTrue(tree.root.right.isBlack(), "O filho direito da raiz deve ser preto");
+    assertTrue(tree.root.left.left.isRed(), "O nó 2 deve ser vermelho");
+    assertTrue(tree.root.left.right.isRed(), "O nó 7 deve ser vermelho");
+    assertTrue(tree.root.right.left.isRed(), "O nó 12 deve ser vermelho");
+    assertTrue(tree.root.right.right.isRed(), "O nó 18 deve ser vermelho");
+}
 
 }

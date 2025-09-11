@@ -15,6 +15,11 @@ public class PV {
             while(aux != null) {
                 if(aux.value > value) {
                     if(aux.left == null) {
+                        if(aux.parent != null)
+                            if(aux.parent.value > aux.value)
+                                newNode.uncle = aux.parent.right;
+                            else 
+                                newNode.uncle = aux.left;
                         aux.left = newNode;
                         break;
                     }
@@ -22,16 +27,19 @@ public class PV {
 
                 } else  {
                     if(aux.right == null) {
+                         if(aux.parent != null)
+                            if(aux.parent.value > aux.value)
+                                newNode.uncle = aux.parent.right;
+                            else 
+                                newNode.uncle = aux.parent.left;
                         aux.right = newNode;
                         break;
                     }
                     aux = aux.right;
                 }
             }
-
-            newNode.parent = aux;
             
-            newNode.uncle = aux.parent.value > aux.value ? aux.parent.right : aux.parent.left;
+            newNode.parent = aux;
         }
 
          checkNode(newNode);
@@ -54,19 +62,22 @@ public class PV {
         } 
 
         if(node.isRed() && node.parent.isRed() && (node.uncle == null || node.uncle.isBlack())) {
-            if(node.parent.isZigZag())
+            if(node.parent.isZigZag()) {
                 rotationLeft(node.parent);
-            
-            if(node.parent.isZagZig())
+                node = node.left;
+            }
+            if(node.parent.isZagZig()) {
                 rotationRight(node.parent);
+                node = node.right;
+            } 
         }
 
-        if(node.isRed() && node.parent.isRed() && (node.uncle == null || node.uncle.isBlack())) {
-            node.parent.color = Color.RED;
-            node.parent.parent.color = Color.BLACK;
+        if(node.isRed() && node.parent.isRed()) {
+            node.parent.color = Color.BLACK;
+            node.parent.parent.color = Color.RED;
 
-            if(node.parent.hasOnlyLeft()) rotationRight(node.parent);
-            else rotationLeft(node.parent);
+            if(node.parent.hasOnlyLeft()) rotationRight(node.parent.parent);
+            else rotationLeft(node.parent.parent);
         }
     }
 
@@ -86,7 +97,6 @@ public class PV {
         newRoot.right = node;
 
         if(node.left != null) node.left.parent = node;
-
     }
 
     public void rotationLeft (Node node) {
@@ -101,11 +111,18 @@ public class PV {
             node.parent.right = newRoot;
         
         newRoot.parent = node.parent;
-        node.parent = node.parent;
+        node.parent = newRoot;
         newRoot.left = node;
 
         if(node.right != null) 
             node.right.parent = node;
+    }
+
+    public static void main(String[] args) {
+        PV tree = new PV(null);
+        tree.addValue(10); // raiz
+        tree.addValue(15); // filho esquerdo
+        tree.addValue(12); // tio
     }
 
 
