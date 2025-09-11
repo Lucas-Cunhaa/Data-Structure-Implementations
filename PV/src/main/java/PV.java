@@ -118,22 +118,33 @@ public class PV {
             node.right.parent = node;
     }
 
-    public boolean isPv(Node current) {
-        if(current != null && current.isRed()) return false;
+    public boolean isPv(Node root) {
+       if(root == null) return true;
 
-        return checkIsPv(current);
+       if(root.isRed()) return false;
+
+       return checkIsPvByColor(root) && (checkPVByHeigth(root) != -1);
     }
     
-    private boolean checkIsPv(Node current) {
+    private boolean checkIsPvByColor(Node current) {
         if(current == null) return true; 
 
-        if(current.isRed() && !current.isFolha()) {
-            if(current.hasOnlyLeft() && current.left.isRed() || current.hasOnlyRigth() && current.right.isRed()) return false;
-            
-            if(current.left.isRed() || current.right.isRed()) return false;
+        if(current.isRed()) {
+            if((current.left != null && current.left.isRed()) || current.right != null && current.right.isRed()) return false;
         }
 
-        return checkIsPv(current.right) && checkIsPv(current.left);
+        return checkIsPvByColor(current.right) && checkIsPvByColor(current.left);
+    }
+
+    private int checkPVByHeigth(Node current) {
+        if (current == null) return 1;
+
+        int leftHeigth = checkPVByHeigth(current.left);
+        int rigthHeigth = checkPVByHeigth(current.right);
+
+        if(leftHeigth == -1 || rigthHeigth == -1 || leftHeigth != rigthHeigth) return -1;
+
+        return leftHeigth + (current.isBlack() ? 1 : 0);
     }
 
     public static void main(String[] args) {

@@ -37,16 +37,16 @@ public class Node {
     }
 
     public int getBlackHeight() {
-        if(isFolha()) return 1;
-
-        if(this.right == null) 
-            return this.left.isBlack() ?  1 + this.left.getBlackHeight() : 0 + this.left.getBlackHeight();
-
-        if(this.left == null)
-            return this.right.isBlack() ?  1 + this.right.getBlackHeight() : 0 + this.right.getBlackHeight();
-
-        return (this.right.isBlack() ? 1 : this.left.isBlack() ? 1 : 0) + Math.max(this.right.getBlackHeight(), this.left.getBlackHeight());
+        return getBlackHeight(this);
     }
+
+    private int getBlackHeight(Node node) {
+        if (node == null) return 1;
+
+        int sum = node.isBlack() ? 1 : 0;
+
+        return sum + (node.left == null ? getBlackHeight(node.right) : getBlackHeight(node.left));
+    }   
     
     public boolean isRed() {
         return this.color == Color.RED;
