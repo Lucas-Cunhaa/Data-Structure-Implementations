@@ -42,7 +42,7 @@ public class PV {
             newNode.parent = aux;
         }
 
-         checkNode(newNode);
+        checkNode(newNode);
     }
 
     public void checkNode(Node node) {
@@ -116,6 +116,24 @@ public class PV {
 
         if(node.right != null) 
             node.right.parent = node;
+    }
+
+    public boolean isPv(Node current) {
+        if(current != null && current.isRed()) return false;
+
+        return checkIsPv(current);
+    }
+    
+    private boolean checkIsPv(Node current) {
+        if(current == null) return true; 
+
+        if(current.isRed() && !current.isFolha()) {
+            if(current.hasOnlyLeft() && current.left.isRed() || current.hasOnlyRigth() && current.right.isRed()) return false;
+            
+            if(current.left.isRed() || current.right.isRed()) return false;
+        }
+
+        return checkIsPv(current.right) && checkIsPv(current.left);
     }
 
     public static void main(String[] args) {
