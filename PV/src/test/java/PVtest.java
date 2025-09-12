@@ -284,7 +284,7 @@ public void test_MultiLevelInsertion() {
     assertTrue(tree.root.right.right.isRed(), "O nó 18 deve ser vermelho");
 }
 
- @Test
+    @Test
     public void testEmptyTree() {
         PV tree = new PV(null);
         assertTrue(tree.isPv(null), "Árvore vazia deve ser válida");
@@ -363,6 +363,64 @@ public void test_MultiLevelInsertion() {
         PV tree = new PV(root);
 
         assertFalse(tree.isPv(root), "Vermelho com neto vermelho deve ser inválido");
+    }
+
+    @Test
+    public void testEmptyTreeBH() {
+        PV tree = new PV(null);
+        assertEquals(-1, tree.getBlackHeight(), "Árvore vazia deve retornar -1");
+    }
+
+    @Test
+    public void testSingleBlackNodeBH() {
+        Node root = new Node(10, ColorEnum.BLACK);
+        PV tree = new PV(root);
+
+        assertEquals(1, tree.getBlackHeight(), "Raiz preta deve contar como altura preta = 1");
+    }
+
+    @Test
+    public void testSingleRedNodeBH() {
+        Node root = new Node(10, ColorEnum.RED);
+        PV tree = new PV(root);
+
+        assertEquals(0, tree.getBlackHeight(), "Raiz vermelha não deve contar");
+    }
+
+    @Test
+    public void testRightPathAllBlack() {
+        Node root = new Node(10, ColorEnum.BLACK);
+        root.right = new Node(20, ColorEnum.BLACK);
+        root.right.right = new Node(30, ColorEnum.BLACK);
+
+        PV tree = new PV(root);
+
+        // Caminho: root(black) -> right(black) -> right(black) = 3 pretos
+        assertEquals(3, tree.getBlackHeight());
+    }
+
+    @Test
+    public void testRightPathMixedColors() {
+        Node root = new Node(10, ColorEnum.BLACK);
+        root.right = new Node(20, ColorEnum.RED);
+        root.right.right = new Node(30, ColorEnum.BLACK);
+
+        PV tree = new PV(root);
+
+        // Caminho: root(black=1) -> right(red=0) -> right(black=1) = 2
+        assertEquals(2, tree.getBlackHeight());
+    }
+
+    @Test
+    public void testOnlyLeftChildrenIgnored() {
+        Node root = new Node(10, ColorEnum.BLACK);
+        root.left = new Node(5, ColorEnum.BLACK);
+        root.left.left = new Node(2, ColorEnum.BLACK);
+
+        PV tree = new PV(root);
+
+        // O método só percorre pela direita, então deve contar só a raiz
+        assertEquals(1, tree.getBlackHeight());
     }
 
 }

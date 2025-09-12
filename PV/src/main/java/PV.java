@@ -81,6 +81,21 @@ public class PV {
         }
     }
 
+    public int getBlackHeight() {
+        if(root == null) return -1;
+
+        Node aux = root;
+        int result = 0;
+
+        while(aux != null) {
+            if(aux.isBlack()) result += 1;
+
+            aux = aux.right;
+        }
+
+        return result;
+    }
+    
     public void rotationRight (Node node) {
         Node newRoot = node.left;
         node.left = newRoot.right;
