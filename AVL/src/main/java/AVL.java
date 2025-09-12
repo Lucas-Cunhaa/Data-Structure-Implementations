@@ -120,6 +120,17 @@ public class AVL {
     public Node getRoot() {
         return this.root;
     }
+
+      public boolean isAvl() {
+        return isAvl(root);
+    }
+
+    private boolean isAvl(Node current) {
+        if(current == null) return true;
+
+        return current.isBalanced() && isAvl(current.right) && isAvl(current.left);
+    }
+
 }
 
 class Node {
@@ -156,9 +167,6 @@ class Node {
 
          return 1 + Math.max(this.left.getHeight(), this.right.getHeight());
     }
-
-
-    
 
     public int getBalance() {
         int leftHeigth = this.left == null ? -1 : this.left.getHeight();
